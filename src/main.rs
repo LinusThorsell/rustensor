@@ -89,7 +89,7 @@ impl Layer for Dense {
 
             let cost_gradient = output - target;
 
-            neuron.error = cost_gradient;
+            neuron.error = cost_gradient * Linear::derivative(output);
         }
     }
 
@@ -127,14 +127,17 @@ impl Network {
     }
 
     fn calculate_output(&mut self, input: &Vec<f64>) -> Vec<f64> {
+        // Input layer
         self.layers[0].update_inputs(input);
         let mut output = self.layers[0].calculate_output(ReLU::function);
+
+        // Hidden layers
         for i in 1..self.layers.len()-1 {
             self.layers[i].update_inputs(&output);
             output = self.layers[i].calculate_output(ReLU::function);
         }
 
-        // No relu for last layer
+        // Output layer - No relu for last layer
         let last_layer_index = self.layers.len()-1;
         self.layers[last_layer_index].update_inputs(&output);
         output = self.layers[last_layer_index].calculate_output(Linear::function);
