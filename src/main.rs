@@ -1,4 +1,4 @@
-use rustensor::activations::{ActivationFunction, Linear, ReLU};
+use rustensor::activations::{ActivationFunction, ActivationFunctionType, Linear, ReLU};
 
 struct Neuron {
     inputs: Vec<f64>,
@@ -40,7 +40,7 @@ impl Neuron {
 }
 
 trait Layer {
-    fn calculate_output(&mut self, activation_function: fn(f64) -> f64) -> Vec<f64>;
+    fn calculate_output(&mut self, activation_function: T: ActivationFunction) -> Vec<f64>;
     fn update_inputs(&mut self, inputs: &Vec<f64>) -> ();
 
     // For training network
@@ -50,11 +50,12 @@ trait Layer {
 }
 
 struct Dense {
-    neurons: Vec<Neuron>
+    neurons: Vec<Neuron>,
+    activation_function: ActivationFunctionType
 }
 
 impl Dense {
-    fn new(input_neurons: u32, output_neurons: u32) -> Dense {
+    fn new(input_neurons: u32, output_neurons: u32, activation_function: ActivationFunctionType) -> Dense {
         let mut neurons = Vec::new();
 
         for _ in 0..output_neurons {
@@ -62,7 +63,8 @@ impl Dense {
         }
 
         Dense {
-            neurons
+            neurons,
+            activation_function
         }
     }
 }
@@ -179,10 +181,10 @@ impl Network {
 }
 
 fn main() {
-    let input_layer = Dense::new(1, 2);
-    let hidden_layer_1 = Dense::new(2, 2);
-    let hidden_layer_2 = Dense::new(2, 2);
-    let output_layer = Dense::new(2, 1);
+    let input_layer = Dense::new(1, 2, ReLU);
+    let hidden_layer_1 = Dense::new(2, 2, ReLU);
+    let hidden_layer_2 = Dense::new(2, 2, ReLU);
+    let output_layer = Dense::new(2, 1, ReLU);
 
     let mut network = Network::new(vec![
         input_layer,
