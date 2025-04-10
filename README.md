@@ -1,4 +1,4 @@
-![Rustensor Logo](./rustensor.png)
+<img src="./rustensor.png" alt="Rustensor Logo" width="300"/>
 
 # Experimenting with Deep Neural Networks in Rust
 
