@@ -8,7 +8,7 @@ impl ActivationFunction for Linear {
     fn function(x: f64) -> f64 {
         x
     }
-    fn derivative(x: f64) -> f64 {
+    fn derivative(_x: f64) -> f64 {
         1.0
     }
 }
